@@ -10,13 +10,29 @@ const arr = [
   "../img/Screenshot 2024-06-02 133444.png",
 ];
 
-function fills() {
+function creatdiv(num) {
+  for (let i = 0; i < num; i++) {
+    let div = document.createElement("div");
+    div.className = "null";
+
+    let img = document.createElement("img");
+    img.className = "hidden";
+
+    img.setAttribute("src", "");
+    div.appendChild(img);
+    game.appendChild(div);
+  }
+}
+
+
+
+function fills(num) {//פונקציה שממלאת את הדיבים רנדומלית
   empty();
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < num / 2; i++) {
     let count = 0;
 
     while (count < 2) {
-      let rand = Math.floor(Math.random() * 16);
+      let rand = Math.floor(Math.random() * num);
       if (game.children[rand].className == "null") {
         game.children[rand].className = `${i}`;
         game.children[rand].children[0].setAttribute("src", arr[i]);
@@ -28,7 +44,7 @@ function fills() {
 
 function empty() {
   //פונקציה שמרוקת
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < numOfCards; i++) {
     game.children[i].className = "null";
     game.children[i].children[0].classList.add("hidden");
   }
@@ -36,41 +52,96 @@ function empty() {
 
 function win() {
   //פונקציה ניצחון
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < numOfCards; i++) {
     if (game.children[i].children[0].classList.contains("hidden")) {
       return false;
     }
   }
   return true;
 }
+
+function resetAll() {//dom  מהפונקציה שמוחקת 
+  while (game.firstChild) {
+    game.removeChild(game.firstChild);
+  }
+}
+
 let gameStarted = false;
 let counterclick;
 let firstClick;
 let secondClick;
+let numOfCards = 4;
+let difficultySelect = document.querySelector("#difficult");
+let  countdown;
+let score =0;
+let highScore = localStorage.getItem("highScore") || 0;  // טען את הניקוד הגבוה מ-Local Storage
 
-document.querySelector("#start").addEventListener("click", function () {
-  fills();
+document.querySelector("#highScore").textContent = `High Score: ${highScore}`;
+
+difficultySelect.addEventListener("change", function () {//בוחר את רמת המשחק
+  let difficult = difficultySelect.value;
+  if (difficult === "easy") {
+    numOfCards = 4;
+  }
+  if (difficult === "medium") {
+    numOfCards = 8;
+  }
+  if (difficult === "hard") {
+    numOfCards = 16;
+  }
+ 
+});
+
+
+
+document.querySelector("#start").addEventListener("click", function () {  //start מקום ההפעלה של 
+  resetAll();
+  creatdiv(numOfCards);
+  fills(numOfCards);
   counterclick = 0;
   firstClick = null;
   secondClick = null;
   gameStarted = true;
+
+
+let timeLeft = 90; // 1.5 minutes
+
+let timerDisplay = document.querySelector("#timer");// עושה פה טיימר
+timerDisplay.textContent = `Time left:\n 00:${timeLeft} `;
+
+// עצירת הטיימר אם כבר פועל ואז איפוסו
+if (countdown) {
+  clearInterval(countdown);
+}
+
+countdown = setInterval(() => {
+  timeLeft--;
+  timerDisplay.textContent = `Time left:\n 00:${timeLeft} `;
+
+  if (timeLeft === 0) {
+    clearInterval(countdown);
+    alert("Time is up!");
+  }
+}, 1000);
+
+
+  let gameDivs = document.querySelectorAll(".game div");//פונקציה שעושה HOVER על הDIV אחרי תחילת המשחק
+  gameDivs.forEach(function (div) {
+    div.addEventListener("mouseover", function () {
+      if (gameStarted) {
+        div.style.border = "2px black solid";
+      }
+    });
+    div.addEventListener("mouseout", function () {
+      div.style.border = "2.5px red solid";
+    });
+  });
 });
 
 
-let gameDivs = document.querySelectorAll(".game div");//רק כשהמשחק מתחיל תוסיף הובר
-gameDivs.forEach(function (div) {
-  div.addEventListener("mouseover", function () {
-    if (gameStarted) {
-      div.style.border = "2px black solid";
-    }
-  });
-  div.addEventListener("mouseout", function () {
-    div.style.border = "2.5px red solid";
-  });
-});
 
 
-let modal = document.querySelector("#winModal");
+let modal = document.querySelector("#winModal");//מודל אם נצח מציג הודעת ניצחון
 let span = document.querySelector(".close");
 let playAgain = document.querySelector("#playAgain");
 
@@ -114,11 +185,14 @@ game1.addEventListener("click", function (e) {
     console.log(firstClick);
   }
   if (counterclick === 1) return;
- 
+
   if (firstClick.classList[0] === secondClick.classList[0]) {
     //משווה את הלחיצות
 
     console.log("you find ");
+    score += 10;  // הוספת ניקוד
+    document.querySelector("#score").textContent = `Score: ${score}`;
+
 
     if (win()) {
       setTimeout(() => {
@@ -140,3 +214,11 @@ game1.addEventListener("click", function (e) {
     }, 1000);
   }
 });
+
+function checkHighScore() {// פונקציה ששומרת את הניקוד הגבוה ביותר LOCAL sorage
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("highScore", highScore);  // שמירת הניקוד הגבוה ב-Local Storage
+    document.querySelector("#highScore").textContent = `High Score: ${highScore}`;
+  }
+}
