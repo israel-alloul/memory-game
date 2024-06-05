@@ -24,9 +24,8 @@ function creatdiv(num) {
   }
 }
 
-
-
-function fills(num) {//פונקציה שממלאת את הדיבים רנדומלית
+function fills(num) {
+  //פונקציה שממלאת את הדיבים רנדומלית
   empty();
   for (let i = 0; i < num / 2; i++) {
     let count = 0;
@@ -60,7 +59,8 @@ function win() {
   return true;
 }
 
-function resetAll() {//dom  מהפונקציה שמוחקת 
+function resetAll() {
+  //dom  מהפונקציה שמוחקת
   while (game.firstChild) {
     game.removeChild(game.firstChild);
   }
@@ -72,13 +72,16 @@ let firstClick;
 let secondClick;
 let numOfCards = 4;
 let difficultySelect = document.querySelector("#difficult");
-let  countdown;
-let score =0;
-let highScore = localStorage.getItem("highScore") || 0;  // טען את הניקוד הגבוה מ-Local Storage
+let countdown;
+let score = 0;
+let highScore = localStorage.getItem("highScore") || 0; // טען את הניקוד הגבוה מ-Local Storage
+let currentUser =
+  JSON.parse(localStorage.getItem("currentUser")).firstName || "Player5";
 
 document.querySelector("#highScore").textContent = `High Score: ${highScore}`;
 
-difficultySelect.addEventListener("change", function () {//בוחר את רמת המשחק
+difficultySelect.addEventListener("change", function () {
+  //בוחר את רמת המשחק
   let difficult = difficultySelect.value;
   if (difficult === "easy") {
     numOfCards = 4;
@@ -89,12 +92,10 @@ difficultySelect.addEventListener("change", function () {//בוחר את רמת 
   if (difficult === "hard") {
     numOfCards = 16;
   }
- 
 });
 
-
-
-document.querySelector("#start").addEventListener("click", function () {  //start מקום ההפעלה של 
+document.querySelector("#start").addEventListener("click", function () {
+  //start מקום ההפעלה של
   resetAll();
   creatdiv(numOfCards);
   fills(numOfCards);
@@ -102,30 +103,35 @@ document.querySelector("#start").addEventListener("click", function () {  //star
   firstClick = null;
   secondClick = null;
   gameStarted = true;
+  updateCurrentPlayer();
+  checkHighScore();
 
+  score = 0;
+  document.querySelector("#score").textContent = `Score: ${score}`;
 
-let timeLeft = 90; // 1.5 minutes
+  let timeLeft = 90; // 1.5 minutes
 
-let timerDisplay = document.querySelector("#timer");// עושה פה טיימר
-timerDisplay.textContent = `Time left:\n 00:${timeLeft} `;
-
-// עצירת הטיימר אם כבר פועל ואז איפוסו
-if (countdown) {
-  clearInterval(countdown);
-}
-
-countdown = setInterval(() => {
-  timeLeft--;
+  let timerDisplay = document.querySelector("#timer"); // עושה פה טיימר
   timerDisplay.textContent = `Time left:\n 00:${timeLeft} `;
 
-  if (timeLeft === 0) {
+  // עצירת הטיימר אם כבר פועל ואז איפוסו
+  if (countdown) {
     clearInterval(countdown);
-    alert("Time is up!");
   }
-}, 1000);
 
+  countdown = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `Time left:\n 00:${timeLeft} `;
 
-  let gameDivs = document.querySelectorAll(".game div");//פונקציה שעושה HOVER על הDIV אחרי תחילת המשחק
+    if (timeLeft === 0) {
+      clearInterval(countdown);
+      document.querySelector(".modal-content").innerText = "time is up!";
+
+      modal.style.display = "block";
+    }
+  }, 1000);
+
+  let gameDivs = document.querySelectorAll(".game div"); //פונקציה שעושה HOVER על הDIV אחרי תחילת המשחק
   gameDivs.forEach(function (div) {
     div.addEventListener("mouseover", function () {
       if (gameStarted) {
@@ -138,10 +144,13 @@ countdown = setInterval(() => {
   });
 });
 
+function updateCurrentPlayer() {
+  document.querySelector(
+    "#currentPlayer"
+  ).textContent = `Current Player: ${currentUser}`;
+}
 
-
-
-let modal = document.querySelector("#winModal");//מודל אם נצח מציג הודעת ניצחון
+let modal = document.querySelector("#winModal"); //מודל אם נצח מציג הודעת ניצחון
 let span = document.querySelector(".close");
 let playAgain = document.querySelector("#playAgain");
 
@@ -190,15 +199,32 @@ game1.addEventListener("click", function (e) {
     //משווה את הלחיצות
 
     console.log("you find ");
-    score += 10;  // הוספת ניקוד
+    score += 10; // הוספת ניקוד
     document.querySelector("#score").textContent = `Score: ${score}`;
-
 
     if (win()) {
       setTimeout(() => {
         modal.style.display = "block";
+        let storedData = JSON.parse(localStorage.getItem("users")) || [];
+        let current = JSON.parse(localStorage.getItem("currentUser"));
+        current.highScore += 20;
+    
+        // מציאת המשתמש הנוכחי במערך המשתמשים
+        let userIndex = storedData.findIndex((value) => value.email === current.email);
+    
+        if (userIndex !== -1) {
+          storedData[userIndex] = current;
+        }
+    
+        // שמירת הנתונים המעודכנים חזרה ל-localStorage
+        localStorage.setItem("users", JSON.stringify(storedData));
+        localStorage.setItem("currentUser", JSON.stringify(current));
+        console.log(highScore,"highScore");
+        console.log(score,"score");
+        checkHighScore()
       }, 500);
     }
+
 
     counterclick = 0;
     firstClick = null;
@@ -214,11 +240,15 @@ game1.addEventListener("click", function (e) {
     }, 1000);
   }
 });
+localStorage.removeItem("highScore");
 
-function checkHighScore() {// פונקציה ששומרת את הניקוד הגבוה ביותר LOCAL sorage
+function checkHighScore() {
+  // פונקציה ששומרת את הניקוד הגבוה ביותר LOCAL sorage
   if (score > highScore) {
     highScore = score;
-    localStorage.setItem("highScore", highScore);  // שמירת הניקוד הגבוה ב-Local Storage
-    document.querySelector("#highScore").textContent = `High Score: ${highScore}`;
+    
+    document.querySelector(
+      "#highScore"
+    ).textContent = `High Score: ${highScore}`;
   }
 }

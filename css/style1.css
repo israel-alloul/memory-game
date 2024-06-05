@@ -2,7 +2,11 @@
   box-sizing: border-box;
 }
 body{
+  
+  background-color: #f4f4f4;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 .game div {
   width: 95px;
@@ -46,12 +50,15 @@ img {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 .close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
+  cursor: pointer;
 }
 .close:hover,
 .close:focus {
@@ -62,24 +69,108 @@ img {
 
 #timer{
   color: red;
-  border: 1px solid black; /* הוספת מסגרת שחורה בעובי 2 פיקסלים */
-  padding: 5px 5px; /* מרווח בתוך המסגרת */
-  display: inline-block; /* כדי שהמסגרת תתאים בדיוק לטקסט */
-
+  border: 2px solid black;
+  padding: 10px;
+  display: inline-block;
+  font-size: 20px;
+  margin: 10px;
 }
 
 h1{
   text-align: center;
+  color: #333;
+  margin-top: 20px;
 }
 
 #score {
   font-size: 24px;
   color: black;
   margin-bottom: 10px;
+  
 }
 
 #highScore {
   font-size: 24px;
   color: black;
   margin-bottom: 10px;
+}
+
+#start {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 20px 0;
+  transition: background-color 0.3s ease;
+}
+#start:hover {
+  background-color: #45a049;
+}
+
+#difficult {
+  padding: 10px;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+
+@media (max-width: 500px) {
+  .game {
+    width: 100%;
+    padding: 10px;
+  }
+  .game div {
+    width: 70px;
+    height: 70px;
+  }
+  img {
+    width: 65px;
+    height: 65px;
+  }
+  #timer {
+    font-size: 18px;
+  }
+  #score, #highScore, #currentPlayer {
+    font-size: 20px;
+  }
+  #start {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  #difficult {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game {
+    width: 100%;
+    padding: 5px;
+  }
+  .game div {
+    width: 50px;
+    height: 50px;
+  }
+  img {
+    width: 45px;
+    height: 45px;
+  }
+  #timer {
+    font-size: 16px;
+    padding: 5px;
+  }
+  #score, #highScore, #currentPlayer {
+    font-size: 18px;
+  }
+  #start {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  #difficult {
+    padding: 6px;
+    font-size: 12px;
+  }
 }
