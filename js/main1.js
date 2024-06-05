@@ -7,20 +7,24 @@ up.addEventListener("click", () => {
   signup.style.display = "block";
 });
 
-document.querySelector("#sum2").addEventListener("click", () => {
-  // Retrieve form field values
+document.querySelector("#sum2").addEventListener("click", (event) => {
+    let form2 = document.getElementById("sign-form");
+    if (form2.reportValidity()) {
+      event.preventDefault();
+    }
+  
   let Fname = document.querySelector("#Fname").value;
   let Lname = document.querySelector("#Lname").value;
   let email = document.querySelector("#email").value;
   let password = document.querySelector("#passwordSignup").value;
-let score=50;
+
   // Create the JSON object from validated form data
   let user = {
     firstName: Fname, // Use consistent naming conventions
     lastName: Lname,
     email: email,
     password: password,
-    highScore:0
+    highScore: 0,
   };
 
   // Access or initialize local storage data (handle empty storage gracefully)
@@ -30,17 +34,22 @@ let score=50;
   const matchingUser = storedData.find((user) => user.email === email);
   if (matchingUser) {
     showModal("A user with this email address already exists!");
-    return; 
+    return;
   }
-  
+
   storedData.push(user);
   localStorage.setItem("users", JSON.stringify(storedData));
   console.log("Person data stored successfully!");
   localStorage.setItem("currentUser", JSON.stringify(user));
-  window.location.href = "html/index1.html";
+  window.location.href = "html/index2.html";
 });
 
-document.querySelector("#log").addEventListener("click", () => {
+document.querySelector("#log").addEventListener("click", (event) => {
+  let form = document.getElementById("login-form");
+  if (form.reportValidity()) {
+    event.preventDefault();
+  }
+
   let name = document.querySelector("#name").value;
   let password = document.querySelector("#password").value;
   let message = document.getElementById("message");
@@ -60,7 +69,7 @@ document.querySelector("#log").addEventListener("click", () => {
     message.textContent = "יופי התחברת";
     message.style.color = "green";
     localStorage.setItem("currentUser", JSON.stringify(user)); // שמירת המשתמש המחובר ב-Local Storage
-    window.location.href = "html/index1.html";
+    window.location.href = "html/index2.html";
   } else {
     message.textContent = "שם משתמש או סיסמה לא חוקי";
     message.style.color = "red";
@@ -79,20 +88,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // פונקציה להציג את ה-modal
 function showModal(message) {
-    let modal = document.getElementById("errorModal");
-    let modalMessage = document.getElementById("modalMessage");
-    let span = document.getElementsByClassName("close")[0];
-  
-    modalMessage.textContent = message;
-    modal.style.display = "block";
-  
-    span.onclick = function () {
+  let modal = document.getElementById("errorModal");
+  let modalMessage = document.getElementById("modalMessage");
+  let span = document.getElementsByClassName("close")[0];
+
+  modalMessage.textContent = message;
+  modal.style.display = "block";
+
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
       modal.style.display = "none";
-    };
-  
-    window.onclick = function (event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    };
-  }
+    }
+  };
+}

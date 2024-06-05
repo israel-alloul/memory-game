@@ -1,3 +1,8 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -5,12 +10,22 @@ body {
   justify-content: center;
   height: 100vh;
   background-color: rgb(135, 207, 243);
+  margin: 0;
+  padding: 0;
 }
 
 h3 {
   text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
+img {
+  width: 300px;
+  height: 250px;
+}
+
+/* כפתורים */
 button {
   width: 100%;
   padding: 10px;
@@ -19,42 +34,48 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
 }
 
 button:hover {
   background-color: #45a049;
 }
 
-.sign-up {
-  margin: 50px auto;
+/* טפסים */
+.sign-up, .Login {
+  width: 300px;
+  max-width: 100%;
+  margin: 20px auto;
   padding: 20px;
   background-color: #859bc699;
   border-radius: 10px;
   text-align: center;
+}
+
+.sign-up {
   display: none;
 }
- 
 
-.Login{
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #859bc699;
-  border-radius: 10px;
-  text-align: center;
-  
+input[type="text"], input[type="password"], input[type="email"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
+/* מודל ניצחון */
 .modal {
-  display: none; 
-  position: fixed; 
-  z-index: 1; 
+  display: none;
+  position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; 
-  height: 100%; 
-  overflow: auto; 
-  background-color: rgb(0,0,0); 
-  background-color: rgba(0,0,0,0.4); 
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
@@ -63,6 +84,8 @@ button:hover {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 .close {
@@ -70,11 +93,70 @@ button:hover {
   float: right;
   font-size: 28px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
-  cursor: pointer;
+}
+
+
+
+/* עיצוב רספונסיבי */
+@media (max-width: 500px) {
+  body {
+    padding: 20px;
+  }
+
+  .sign-up, .Login {
+    width: 80%;
+  }
+
+  .modal-content {
+    width: 90%;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"] {
+    padding: 8px;
+    margin: 8px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .sign-up, .Login {
+    width: 95%;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+
+  button {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"] {
+    padding: 6px;
+    margin: 6px 0;
+  }
 }
