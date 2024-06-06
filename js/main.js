@@ -161,6 +161,7 @@ span.onclick = function () {
 playAgain.onclick = function () {
   modal.style.display = "none";
   document.querySelector("#start").click();
+  checkHighScore();
 };
 
 window.onclick = function (ev) {
@@ -208,23 +209,24 @@ game1.addEventListener("click", function (e) {
         let storedData = JSON.parse(localStorage.getItem("users")) || [];
         let current = JSON.parse(localStorage.getItem("currentUser"));
         current.highScore += 20;
-    
+
         // מציאת המשתמש הנוכחי במערך המשתמשים
-        let userIndex = storedData.findIndex((value) => value.email === current.email);
-    
+        let userIndex = storedData.findIndex(
+          (value) => value.email === current.email
+        );
+
         if (userIndex !== -1) {
           storedData[userIndex] = current;
         }
-    
+
         // שמירת הנתונים המעודכנים חזרה ל-localStorage
         localStorage.setItem("users", JSON.stringify(storedData));
         localStorage.setItem("currentUser", JSON.stringify(current));
-        console.log(highScore,"highScore");
-        console.log(score,"score");
-        checkHighScore()
+        console.log(highScore, "highScore");
+        console.log(score, "score");
+        checkHighScore();
       }, 500);
     }
-
 
     counterclick = 0;
     firstClick = null;
@@ -244,11 +246,15 @@ localStorage.removeItem("highScore");
 
 function checkHighScore() {
   // פונקציה ששומרת את הניקוד הגבוה ביותר LOCAL sorage
-  if (score > highScore) {
-    highScore = score;
-    
-    document.querySelector(
-      "#highScore"
-    ).textContent = `High Score: ${highScore}`;
-  }
+  //   if (score > highScore) {
+  //     highScore = score;
+
+  //     document.querySelector(
+  //       "#highScore"
+  //     ).textContent = `High Score: ${highScore}`;
+  //   }
+  //
+
+  let score100 = JSON.parse(localStorage.getItem("currentUser")).highScore;
+  document.querySelector("#highScore").innerText = `Score: ${score100}`;
 }

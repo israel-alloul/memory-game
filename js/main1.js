@@ -8,29 +8,26 @@ up.addEventListener("click", () => {
 });
 
 document.querySelector("#sum2").addEventListener("click", (event) => {
-    let form2 = document.getElementById("sign-form");
-    if (form2.reportValidity()) {
-      event.preventDefault();
-    }
-  
+  let form2 = document.getElementById("sign-form");
+  if (!form2.reportValidity()) {
+    event.preventDefault();
+    return;
+  }
+
   let Fname = document.querySelector("#Fname").value;
   let Lname = document.querySelector("#Lname").value;
   let email = document.querySelector("#email").value;
   let password = document.querySelector("#passwordSignup").value;
 
-  // Create the JSON object from validated form data
   let user = {
-    firstName: Fname, // Use consistent naming conventions
+    firstName: Fname,
     lastName: Lname,
     email: email,
     password: password,
     highScore: 0,
   };
 
-  // Access or initialize local storage data (handle empty storage gracefully)
   let storedData = JSON.parse(localStorage.getItem("users")) || [];
-
-  // Check if a user with the same email already exists
   const matchingUser = storedData.find((user) => user.email === email);
   if (matchingUser) {
     showModal("A user with this email address already exists!");
@@ -45,20 +42,15 @@ document.querySelector("#sum2").addEventListener("click", (event) => {
 });
 
 document.querySelector("#log").addEventListener("click", (event) => {
+  event.preventDefault();
   let form = document.getElementById("login-form");
-  if (form.reportValidity()) {
-    event.preventDefault();
+  if (!form.reportValidity()) {
+    return;
   }
 
   let name = document.querySelector("#name").value;
   let password = document.querySelector("#password").value;
   let message = document.getElementById("message");
-
-  if (!name || !password) {
-    message.textContent = "מלא תשדות";
-    message.style.color = "red";
-    return;
-  }
 
   let storedData = JSON.parse(localStorage.getItem("users")) || [];
   let user = storedData.find(
@@ -68,21 +60,11 @@ document.querySelector("#log").addEventListener("click", (event) => {
   if (user) {
     message.textContent = "יופי התחברת";
     message.style.color = "green";
-    localStorage.setItem("currentUser", JSON.stringify(user)); // שמירת המשתמש המחובר ב-Local Storage
+    localStorage.setItem("currentUser", JSON.stringify(user));
     window.location.href = "html/index2.html";
   } else {
     message.textContent = "שם משתמש או סיסמה לא חוקי";
     message.style.color = "red";
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  if (currentUser) {
-    console.log("משתמש מחובר: ", currentUser.firstName);
-    // תוכל להשתמש בפרטי המשתמש בכל חלק של האפליקציה
-  } else {
-    console.log("אין משתמש מחובר");
   }
 });
 
