@@ -256,5 +256,5 @@ function checkHighScore() {
   //
 
   let score100 = JSON.parse(localStorage.getItem("currentUser")).highScore;
-  document.querySelector("#highScore").innerText = `Score: ${score100}`;
+  document.querySelector("#highScore").innerText = `HighScore: ${score100}`;
 }
